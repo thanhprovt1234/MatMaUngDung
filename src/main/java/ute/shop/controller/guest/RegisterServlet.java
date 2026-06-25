@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-@WebServlet(urlPatterns = { "/guest/register" })
+@WebServlet(urlPatterns = { "/register", "/guest/register" })
 public class RegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserService userService;

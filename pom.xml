@@ -6,52 +6,41 @@
 	<artifactId>uteshop</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
+
 	<properties>
 		<maven.compiler.release>22</maven.compiler.release>
-		<cargo.tomcat.version>10.1.19</cargo.tomcat.version>
-		<cargo.https.port>8443</cargo.https.port>
-		<cargo.rmi.port>8205</cargo.rmi.port>
-		<cargo.keystore.file>${project.basedir}/.local/tls/tomcat-keystore.p12</cargo.keystore.file>
-		<cargo.keystore.password>changeit</cargo.keystore.password>
-		<cargo.tomcat.connector.keystoreType>PKCS12</cargo.tomcat.connector.keystoreType>
-		<cargo.tomcat.connector.emptySessionPath>false</cargo.tomcat.connector.emptySessionPath>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jetty.version>12.1.10</jetty.version>
+		<jetty.http.port>8081</jetty.http.port>
+		<jetty.https.port>8443</jetty.https.port>
 	</properties>
-	<dependencies>
 
-		<!--
-		https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+	<dependencies>
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
 			<version>6.1.0</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--
-		https://mvnrepository.com/artifact/jakarta.servlet.jsp.jstl/jakarta.servlet.jsp.jstl-api -->
 		<dependency>
 			<groupId>jakarta.servlet.jsp.jstl</groupId>
 			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
 			<version>3.0.2</version>
 		</dependency>
-		<!--
-		https://mvnrepository.com/artifact/jakarta.servlet.jsp/jakarta.servlet.jsp-api -->
 		<dependency>
 			<groupId>jakarta.servlet.jsp</groupId>
 			<artifactId>jakarta.servlet.jsp-api</artifactId>
 			<version>4.0.0</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--
-		https://mvnrepository.com/artifact/org.glassfish.web/jakarta.servlet.jsp.jstl -->
 		<dependency>
 			<groupId>org.glassfish.web</groupId>
 			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
 			<version>3.0.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
 			<version>8.0.33</version>
 		</dependency>
 		<dependency>
@@ -59,50 +48,37 @@
 			<artifactId>sitemesh</artifactId>
 			<version>3.2.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.17.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>6.6.1.Final</version>
-			<scope>compile</scope>
 		</dependency>
-		<!--
-		https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>8.0.1.Final</version>
 		</dependency>
-		<!--
-		https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
 			<version>3.1.0</version>
 		</dependency>
-		<!--
-		https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen -->
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
 			<version>6.6.1.Final</version>
-			<scope>compile</scope>
-
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.42</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>javax.mail-api</artifactId>
@@ -118,11 +94,32 @@
 			<artifactId>jbcrypt</artifactId>
 			<version>0.4</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.6</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.18.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
+		<finalName>uteshop</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -148,59 +145,23 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.4.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.jetty.ee11</groupId>
+				<artifactId>jetty-ee11-maven-plugin</artifactId>
+				<version>${jetty.version}</version>
 				<configuration>
-					<webappDirectory></webappDirectory>
+					<webApp>
+						<contextPath>/uteshop</contextPath>
+					</webApp>
+					<httpConnector>
+						<port>${jetty.http.port}</port>
+					</httpConnector>
+					<jettyXmls>
+						<jettyXml>${project.basedir}/src/main/jetty/jetty-https.xml</jettyXml>
+					</jettyXmls>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>local-https</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.cargo</groupId>
-						<artifactId>cargo-maven3-plugin</artifactId>
-						<version>1.10.12</version>
-						<configuration>
-							<container>
-								<containerId>tomcat10x</containerId>
-								<zipUrlInstaller>
-									<url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo.tomcat.version}/tomcat-${cargo.tomcat.version}.zip</url>
-								</zipUrlInstaller>
-							</container>
-							<configuration>
-								<properties>
-									<cargo.servlet.port>${cargo.https.port}</cargo.servlet.port>
-									<cargo.rmi.port>${cargo.rmi.port}</cargo.rmi.port>
-									<cargo.protocol>https</cargo.protocol>
-									<cargo.tomcat.connector.keystoreFile>${cargo.keystore.file}</cargo.tomcat.connector.keystoreFile>
-									<cargo.tomcat.connector.keystorePass>${cargo.keystore.password}</cargo.tomcat.connector.keystorePass>
-									<cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
-									<cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
-									<cargo.tomcat.connector.secure>true</cargo.tomcat.connector.secure>
-									<cargo.tomcat.connector.scheme>https</cargo.tomcat.connector.scheme>
-									<cargo.tomcat.connector.SSLEnabled>true</cargo.tomcat.connector.SSLEnabled>
-								</properties>
-							</configuration>
-							<!-- Thêm phần cấu hình để hỗ trợ reload mã nguồn tĩnh mà không cần khởi động lại server -->
-							<deployables>
-								<deployable>
-									<groupId>${project.groupId}</groupId>
-									<artifactId>${project.artifactId}</artifactId>
-									<type>war</type>
-									<properties>
-										<context>/uteshop</context>
-									</properties>
-								</deployable>
-							</deployables>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

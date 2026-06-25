@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ute.shop.config.EncryptedStringConverter;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,10 +39,12 @@ public class Order {
 	@JoinColumn(name = "commission_id", referencedColumnName = "_id", nullable = false)
 	private Commission commission; // Tham chiếu đến Commission
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 1024)
+	@Convert(converter = EncryptedStringConverter.class)
 	private String address; // User's address
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 512)
+	@Convert(converter = EncryptedStringConverter.class)
 	private String phone; // User's phone number
 
 	@Enumerated(EnumType.STRING)

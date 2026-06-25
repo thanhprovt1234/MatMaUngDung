@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import ute.shop.utils.JwtUtils;
 
 @WebServlet(urlPatterns = "/logout")
 public class LogoutController extends HttpServlet {
@@ -16,25 +17,21 @@ public class LogoutController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// Xóa session của người dùng
 		HttpSession session = req.getSession(false);
 		if (session != null) {
-			session.invalidate(); // Xóa toàn bộ session
+			session.invalidate();
 		}
 
-		// Nếu có cookie "Remember Me", xóa nó
-		Cookie[] cookies = req.getCookies();
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if ("email".equals(cookie.getName())) {
-					cookie.setMaxAge(0); // Xóa cookie bằng cách set age = 0
-					cookie.setPath("/"); // Đảm bảo cookie có thể xóa trên toàn bộ website
-					resp.addCookie(cookie);
-				}
-			}
-		}
+		JwtUtils.clearAccessTokenCookie(req, resp);
+		clearRememberMeCookie(resp);
 
-		// Chuyển hướng về trang login sau khi đăng xuất
 		resp.sendRedirect(req.getContextPath() + "/login");
+	}
+
+	private void clearRememberMeCookie(HttpServletResponse resp) {
+		Cookie cookie = new Cookie("email", "");
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		resp.addCookie(cookie);
 	}
 }

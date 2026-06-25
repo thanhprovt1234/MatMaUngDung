@@ -9,6 +9,10 @@ public interface IUserService {
 	User login(String email, String password);
 
 	User login1(String email, String rawPassword);
+
+	User findOrCreateGoogleUser(String email, String givenName, String familyName, String fullName, String pictureUrl,
+			String googleSubject);
+
 	// Update existing user
 	void update(User user);
 

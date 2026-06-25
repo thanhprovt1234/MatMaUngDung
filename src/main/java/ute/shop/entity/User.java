@@ -10,6 +10,8 @@ import java.util.List;
 
 import java.util.ArrayList;
 
+import ute.shop.config.EncryptedStringConverter;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -62,7 +64,8 @@ public class User {
 	@Column(nullable = false)
 	private Role role = Role.USER;
 
-	@Column(nullable = true, length = 255)
+	@Column(nullable = true, length = 1024)
+	@Convert(converter = EncryptedStringConverter.class)
 	private String address;
 
 	private String avatar;
