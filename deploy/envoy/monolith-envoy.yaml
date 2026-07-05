@@ -1,0 +1,57 @@
+static_resources:
+  listeners:
+    - name: public_http
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 8088
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: uteshop_gateway
+                use_remote_address: true
+                route_config:
+                  name: uteshop_routes
+                  virtual_hosts:
+                    - name: uteshop
+                      domains: ["*"]
+                      request_headers_to_add:
+                        - header:
+                            key: X-Forwarded-Proto
+                            value: http
+                          append_action: OVERWRITE_IF_EXISTS_OR_ADD
+                        - header:
+                            key: X-Forwarded-Port
+                            value: "8088"
+                          append_action: OVERWRITE_IF_EXISTS_OR_ADD
+                      routes:
+                        - match: { prefix: "/" }
+                          route:
+                            cluster: uteshop_web
+                            timeout: 30s
+                http_filters:
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+
+  clusters:
+    - name: uteshop_web
+      connect_timeout: 5s
+      type: STRICT_DNS
+      load_assignment:
+        cluster_name: uteshop_web
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: uteshop-web
+                      port_value: 8081
+
+admin:
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 9901

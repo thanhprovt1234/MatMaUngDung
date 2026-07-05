@@ -32,6 +32,7 @@
 					<c:when test="${mfaRequired}">
 						<p style="text-align: center;">Enter the OTP sent to ${mfaEmail}</p>
 						<form action="${pageContext.request.contextPath}/login" method="post">
+							<input type="hidden" name="csrfToken" value="${csrfToken}" />
 							<input type="hidden" name="action" value="verifyOtp" />
 							<div class="input_field">
 								<span><i aria-hidden="true" class="fa fa-key"></i></span> <input
@@ -42,6 +43,7 @@
 						</form>
 						<form action="${pageContext.request.contextPath}/login" method="post"
 							style="margin-top: 10px; text-align: center;">
+							<input type="hidden" name="csrfToken" value="${csrfToken}" />
 							<input type="hidden" name="action" value="resendOtp" />
 							<button type="submit" style="background: none; border: 0; color: #007bff; cursor: pointer;">
 								Resend OTP
@@ -50,6 +52,7 @@
 					</c:when>
 					<c:otherwise>
 						<form action="${pageContext.request.contextPath}/login" method="post">
+							<input type="hidden" name="csrfToken" value="${csrfToken}" />
 							<div class="input_field">
 								<span><i aria-hidden="true" class="fa fa-envelope"></i></span> <input
 									type="email" name="email" placeholder="Email Address" required />

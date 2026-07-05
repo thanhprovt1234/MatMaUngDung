@@ -78,13 +78,13 @@ public class SmtpMailService {
 		}
 
 		private static MailSettings load() {
-			String host = getSetting("smtp.host", "SMTP_HOST", DEFAULT_HOST);
-			String port = getSetting("smtp.port", "SMTP_PORT", DEFAULT_PORT);
-			String username = getSetting("smtp.username", "SMTP_USERNAME", null);
-			String password = getSetting("smtp.password", "SMTP_PASSWORD", null);
-			String fromEmail = getSetting("smtp.from", "SMTP_FROM", username);
-			String fromName = getSetting("smtp.fromName", "SMTP_FROM_NAME", DEFAULT_FROM_NAME);
-			String startTls = getSetting("smtp.starttls", "SMTP_STARTTLS", "true");
+			String host = SecretsConfig.get("smtp.host", "SMTP_HOST", DEFAULT_HOST);
+			String port = SecretsConfig.get("smtp.port", "SMTP_PORT", DEFAULT_PORT);
+			String username = SecretsConfig.get("smtp.username", "SMTP_USERNAME", null);
+			String password = SecretsConfig.get("smtp.password", "SMTP_PASSWORD", null);
+			String fromEmail = SecretsConfig.get("smtp.from", "SMTP_FROM", username);
+			String fromName = SecretsConfig.get("smtp.fromName", "SMTP_FROM_NAME", DEFAULT_FROM_NAME);
+			String startTls = SecretsConfig.get("smtp.starttls", "SMTP_STARTTLS", "true");
 
 			if (isBlank(username) || isBlank(password) || isBlank(fromEmail)) {
 				throw new IllegalStateException(
@@ -92,18 +92,6 @@ public class SmtpMailService {
 			}
 
 			return new MailSettings(host, port, username, password, fromEmail, fromName, startTls);
-		}
-
-		private static String getSetting(String propertyName, String envName, String defaultValue) {
-			String value = System.getProperty(propertyName);
-			if (!isBlank(value)) {
-				return value.trim();
-			}
-			value = System.getenv(envName);
-			if (!isBlank(value)) {
-				return value.trim();
-			}
-			return defaultValue;
 		}
 
 		private static boolean isBlank(String value) {

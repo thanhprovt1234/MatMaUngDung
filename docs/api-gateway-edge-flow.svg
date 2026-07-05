@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 40px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 18px; fill: #475569; }
+      .box-title { font-family: Arial, sans-serif; font-size: 24px; font-weight: 700; fill: #0f172a; }
+      .text { font-family: Arial, sans-serif; font-size: 18px; fill: #1f2937; }
+      .small { font-family: Arial, sans-serif; font-size: 15px; fill: #374151; }
+      .tiny { font-family: Arial, sans-serif; font-size: 13px; fill: #4b5563; }
+      .label { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #075985; }
+      .done { font-family: Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #166534; }
+      .todo { font-family: Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #92400e; }
+      .no { font-family: Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #991b1b; }
+      .browser { fill: #eff6ff; stroke: #2563eb; stroke-width: 3; rx: 18; }
+      .edge { fill: #fff7ed; stroke: #ea580c; stroke-width: 3; rx: 18; }
+      .gateway { fill: #fefce8; stroke: #ca8a04; stroke-width: 3; rx: 18; }
+      .app { fill: #f0fdf4; stroke: #16a34a; stroke-width: 3; rx: 18; }
+      .data { fill: #ecfeff; stroke: #0891b2; stroke-width: 3; rx: 18; }
+      .external { fill: #faf5ff; stroke: #7c3aed; stroke-width: 3; rx: 18; }
+      .note { fill: #f8fafc; stroke: #94a3b8; stroke-width: 2; rx: 12; }
+      .arrow { stroke: #0f172a; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .arrow-blue { stroke: #2563eb; stroke-width: 3; fill: none; marker-end: url(#arrowhead-blue); }
+      .arrow-orange { stroke: #ea580c; stroke-width: 3; fill: none; marker-end: url(#arrowhead-orange); }
+      .arrow-green { stroke: #16a34a; stroke-width: 3; fill: none; marker-end: url(#arrowhead-green); }
+      .arrow-purple { stroke: #7c3aed; stroke-width: 3; fill: none; marker-end: url(#arrowhead-purple); }
+      .dash { stroke-dasharray: 9 7; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0f172a"/>
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowhead-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrowhead-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <rect width="1800" height="1080" fill="#ffffff"/>
+  <text x="900" y="58" text-anchor="middle" class="title">Hinh 5.2. Cong API va thiet bi bien trong UTESHOP</text>
+  <text x="900" y="90" text-anchor="middle" class="subtitle">Apache la edge gateway hien tai tren domain that; Envoy la API Gateway scaffold trong Docker production-like.</text>
+
+  <!-- Public client -->
+  <rect x="70" y="160" width="350" height="185" class="browser"/>
+  <text x="245" y="200" text-anchor="middle" class="box-title">Browser / Client</text>
+  <text x="100" y="240" class="text">• Gui request HTTPS</text>
+  <text x="100" y="268" class="text">• Giu JSESSIONID / JWT cookie</text>
+  <text x="100" y="296" class="text">• Tai static assets</text>
+  <text x="100" y="324" class="text">• Goi checkout / login / cart</text>
+
+  <!-- CDN future -->
+  <rect x="70" y="610" width="350" height="185" class="note"/>
+  <text x="245" y="650" text-anchor="middle" class="box-title">CDN Static Assets</text>
+  <text x="100" y="690" class="todo">Trang thai: huong phat trien</text>
+  <text x="100" y="720" class="small">Cache duoc: /css, /js, /images, /assets</text>
+  <text x="100" y="748" class="small">Khong cache: /account, /cart, /orders</text>
+  <text x="100" y="776" class="small">Cache-Control: public vs no-store</text>
+
+  <!-- Apache -->
+  <rect x="545" y="125" width="430" height="275" class="edge"/>
+  <text x="760" y="168" text-anchor="middle" class="box-title">Apache HTTP Server</text>
+  <text x="575" y="210" class="done">Da trien khai tren uteshop.kesug.com</text>
+  <text x="575" y="242" class="text">• TLS termination: ZeroSSL/Public CA</text>
+  <text x="575" y="270" class="text">• HTTP -> HTTPS redirect</text>
+  <text x="575" y="298" class="text">• Reverse proxy ve Jetty 127.0.0.1:8081</text>
+  <text x="575" y="326" class="text">• Security headers: HSTS, CSP, nosniff</text>
+  <text x="575" y="354" class="text">• Access log / error log</text>
+  <text x="575" y="382" class="text">• Rate limit mau: mod_reqtimeout/mod_evasive</text>
+
+  <!-- Envoy -->
+  <rect x="545" y="510" width="430" height="295" class="gateway"/>
+  <text x="760" y="553" text-anchor="middle" class="box-title">Envoy API Gateway</text>
+  <text x="575" y="595" class="done">Da co scaffold Docker production-like</text>
+  <text x="575" y="627" class="text">• Public local: http://localhost:8088</text>
+  <text x="575" y="655" class="text">• Route "/" -> uteshop-web:8081</text>
+  <text x="575" y="683" class="text">• Admin interface: :9901</text>
+  <text x="575" y="711" class="todo">• JWT validation tai gateway: chua</text>
+  <text x="575" y="739" class="todo">• WAF / HMAC / rate limit tap trung: chua</text>
+  <text x="575" y="767" class="todo">• Se tach route /api/payments khi co microservice</text>
+
+  <!-- App -->
+  <rect x="1100" y="250" width="430" height="330" class="app"/>
+  <text x="1315" y="293" text-anchor="middle" class="box-title">Jetty / UTESHOP Web App</text>
+  <text x="1130" y="335" class="text">• Servlet/JSP monolith hien tai</text>
+  <text x="1130" y="363" class="text">• CSRF Filter, Permission Filter</text>
+  <text x="1130" y="391" class="text">• Verify JWT cookie trong app</text>
+  <text x="1130" y="419" class="text">• Rate limit login/OTP trong app</text>
+  <text x="1130" y="447" class="text">• Stripe PaymentIntent</text>
+  <text x="1130" y="475" class="text">• Vault Transit encrypt/decrypt</text>
+  <text x="1130" y="503" class="text">• Security audit log</text>
+  <text x="1130" y="531" class="small">Neu production day du: mot so check se day ra gateway</text>
+
+  <!-- Data and services -->
+  <rect x="1100" y="680" width="430" height="225" class="data"/>
+  <text x="1315" y="722" text-anchor="middle" class="box-title">Data / Internal Services</text>
+  <text x="1130" y="764" class="text">• PostgreSQL / MySQL</text>
+  <text x="1130" y="792" class="text">• Vault KV + Transit</text>
+  <text x="1130" y="820" class="text">• SMTP OTP</text>
+  <text x="1130" y="848" class="text">• payment_transaction chi luu pi_..., last4</text>
+  <text x="1130" y="876" class="text">• phone/address luu dang vault:v...</text>
+
+  <!-- IdP -->
+  <rect x="1325" y="70" width="360" height="145" class="external"/>
+  <text x="1505" y="110" text-anchor="middle" class="box-title">IdP: Google / Keycloak</text>
+  <text x="1355" y="150" class="text">• Google OIDC da dung</text>
+  <text x="1355" y="178" class="text">• Keycloak container da co scaffold</text>
+  <text x="1355" y="206" class="todo">• Uy quyen xac thuc tai gateway: chua</text>
+
+  <!-- WAF/HMAC note -->
+  <rect x="1325" y="930" width="360" height="95" class="note"/>
+  <text x="1355" y="965" class="box-title">Huong nang cap</text>
+  <text x="1355" y="998" class="small">JWT validation tai Envoy, WAF rules,</text>
+  <text x="1355" y="1022" class="small">HMAC signed requests, CDN cache policy.</text>
+
+  <!-- Arrows -->
+  <path d="M420 245 L545 245" class="arrow-blue"/>
+  <text x="448" y="224" class="label">HTTPS :443</text>
+  <text x="448" y="275" class="small">Domain that</text>
+
+  <path d="M420 670 L545 670" class="arrow-orange"/>
+  <text x="440" y="648" class="label">HTTP :8088</text>
+  <text x="440" y="700" class="small">Docker local</text>
+
+  <path d="M975 285 L1100 360" class="arrow-green"/>
+  <text x="1002" y="300" class="label">proxy noi bo</text>
+  <text x="1002" y="326" class="small">127.0.0.1:8081</text>
+
+  <path d="M975 655 L1100 455" class="arrow-green"/>
+  <text x="1000" y="600" class="label">Docker network</text>
+  <text x="1000" y="625" class="small">uteshop-web:8081</text>
+
+  <path d="M1315 580 L1315 680" class="arrow-green"/>
+  <text x="1335" y="634" class="label">JPA / API calls</text>
+
+  <path d="M1325 162 C1180 160, 1075 238, 995 298" class="arrow-purple"/>
+  <text x="1045" y="168" class="label">OIDC login</text>
+  <text x="1045" y="192" class="small">Authorization Code + PKCE</text>
+
+  <path d="M1505 215 C1510 310, 1475 345, 1530 390" class="arrow-purple dash"/>
+  <text x="1538" y="300" class="tiny">Future: gateway JWT/IdP delegation</text>
+
+  <!-- Status legend -->
+  <rect x="70" y="870" width="905" height="145" class="note"/>
+  <text x="100" y="910" class="box-title">Trang thai trien khai trong project</text>
+  <text x="100" y="945" class="done">Da co:</text>
+  <text x="165" y="945" class="small">Apache TLS, reverse proxy, security headers, Envoy scaffold, Keycloak container, app-level CSRF/rate limit.</text>
+  <text x="100" y="975" class="todo">Chua day du:</text>
+  <text x="205" y="975" class="small">JWT validation tai Envoy, WAF rules, HMAC signed request, CDN cache production.</text>
+  <text x="100" y="1005" class="no">Khong cache:</text>
+  <text x="205" y="1005" class="small">/account, /cart, /orders, /checkout, /payments, /admin vi co du lieu rieng tu.</text>
+</svg>

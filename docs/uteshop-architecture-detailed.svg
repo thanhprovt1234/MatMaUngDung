@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 42px; font-weight: 700; fill: #0f172a; }
+      .box-title { font-family: Arial, sans-serif; font-size: 24px; font-weight: 700; fill: #0f172a; }
+      .text { font-family: Arial, sans-serif; font-size: 18px; fill: #1f2937; }
+      .small { font-family: Arial, sans-serif; font-size: 16px; fill: #374151; }
+      .tiny { font-family: Arial, sans-serif; font-size: 14px; fill: #4b5563; }
+      .label { font-family: Arial, sans-serif; font-size: 17px; font-weight: 700; fill: #075985; }
+      .security { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #166534; }
+      .danger { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #991b1b; }
+      .box { fill: #ffffff; stroke: #2563eb; stroke-width: 3; rx: 16; }
+      .gateway { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 3; rx: 16; }
+      .app { fill: #f0fdf4; stroke: #16a34a; stroke-width: 3; rx: 16; }
+      .db { fill: #ecfeff; stroke: #0891b2; stroke-width: 3; rx: 16; }
+      .external { fill: #fff7ed; stroke: #ea580c; stroke-width: 3; rx: 16; }
+      .note { fill: #f8fafc; stroke: #94a3b8; stroke-width: 2; rx: 10; }
+      .arrow { stroke: #0f172a; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .arrow-blue { stroke: #2563eb; stroke-width: 3; fill: none; marker-end: url(#arrowhead-blue); }
+      .arrow-green { stroke: #16a34a; stroke-width: 3; fill: none; marker-end: url(#arrowhead-green); }
+      .arrow-orange { stroke: #ea580c; stroke-width: 3; fill: none; marker-end: url(#arrowhead-orange); }
+      .dash { stroke-dasharray: 9 7; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0f172a"/>
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrowhead-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/>
+    </marker>
+  </defs>
+
+  <rect width="1800" height="1180" fill="#ffffff"/>
+  <text x="900" y="62" text-anchor="middle" class="title">Kien truc trien khai chi tiet UTESHOP</text>
+  <text x="900" y="96" text-anchor="middle" class="small">Browser -> Apache HTTPS -> Jetty App -> Database, ket noi Google OIDC, Stripe, SMTP va Vault</text>
+
+  <!-- Browser -->
+  <rect x="80" y="140" width="430" height="190" class="box"/>
+  <text x="295" y="178" text-anchor="middle" class="box-title">1. Browser / Nguoi dung</text>
+  <text x="110" y="218" class="text">• Render HTML/JSP, form checkout</text>
+  <text x="110" y="248" class="text">• Giu cookie: JSESSIONID, ACCESS_TOKEN JWT</text>
+  <text x="110" y="278" class="text">• Nhap card qua Stripe Elements iframe</text>
+  <text x="110" y="308" class="text">• Gui csrfToken + idempotencyKey</text>
+
+  <!-- Apache -->
+  <rect x="80" y="430" width="430" height="220" class="gateway"/>
+  <text x="295" y="470" text-anchor="middle" class="box-title">2. Apache HTTP Server</text>
+  <text x="110" y="510" class="text">• TLS termination bang ZeroSSL/Public CA</text>
+  <text x="110" y="540" class="text">• Reverse proxy ve Jetty noi bo</text>
+  <text x="110" y="570" class="text">• Them security headers: HSTS, CSP</text>
+  <text x="110" y="600" class="text">• Ghi access log / error log</text>
+  <text x="110" y="630" class="text">• Chan user truy cap truc tiep Jetty</text>
+
+  <!-- Jetty App -->
+  <rect x="640" y="230" width="540" height="480" class="app"/>
+  <text x="910" y="270" text-anchor="middle" class="box-title">3. Jetty Server - UTESHOP Web App</text>
+  <text x="675" y="312" class="text">Servlet Controllers</text>
+  <text x="700" y="342" class="small">• Login/Register, Cart, Order, Payment, Admin</text>
+  <text x="675" y="382" class="text">Security Filters</text>
+  <text x="700" y="412" class="small">• CSRF Filter tao/kiem tra csrfToken</text>
+  <text x="700" y="438" class="small">• Permission Filter va Authorize Filter</text>
+  <text x="675" y="478" class="text">Authentication / Session</text>
+  <text x="700" y="508" class="small">• BCrypt verify password, OTP email</text>
+  <text x="700" y="534" class="small">• Tao ACCESS_TOKEN JWT cookie HttpOnly</text>
+  <text x="675" y="574" class="text">Business Services</text>
+  <text x="700" y="604" class="small">• CartService, OrderService, PaymentService</text>
+  <text x="700" y="630" class="small">• JPA/Hibernate DAO layer</text>
+  <text x="675" y="670" class="text">Security Audit</text>
+  <text x="700" y="700" class="small">• login_failed, csrf_failed, payment_authorized</text>
+
+  <!-- Database -->
+  <rect x="640" y="850" width="540" height="240" class="db"/>
+  <text x="910" y="890" text-anchor="middle" class="box-title">4. Database: PostgreSQL / MySQL</text>
+  <text x="675" y="930" class="text">Luu nghiep vu:</text>
+  <text x="700" y="960" class="small">• user, cart, cart_item</text>
+  <text x="700" y="986" class="small">• orders, order_item</text>
+  <text x="700" y="1012" class="small">• payment_transaction</text>
+  <text x="675" y="1052" class="security">Luu an toan:</text>
+  <text x="795" y="1052" class="small">phone/address = vault:v..., paymentToken = pi_...</text>
+  <text x="675" y="1078" class="danger">Khong luu:</text>
+  <text x="780" y="1078" class="small">PAN day du, CVV, secret key</text>
+
+  <!-- External group -->
+  <rect x="1290" y="140" width="430" height="950" fill="#fffaf0" stroke="#f97316" stroke-width="3" rx="22"/>
+  <text x="1505" y="182" text-anchor="middle" class="box-title">External Services</text>
+
+  <rect x="1330" y="220" width="350" height="145" class="external"/>
+  <text x="1505" y="256" text-anchor="middle" class="box-title">Google OIDC / OAuth2</text>
+  <text x="1355" y="294" class="small">• Tao authorization code</text>
+  <text x="1355" y="320" class="small">• Tra ID Token ve callback</text>
+  <text x="1355" y="346" class="small">• Dung PKCE + state + nonce</text>
+
+  <rect x="1330" y="420" width="350" height="170" class="external"/>
+  <text x="1505" y="456" text-anchor="middle" class="box-title">Stripe PSP Sandbox</text>
+  <text x="1355" y="494" class="small">• Stripe.js / Card Element tren browser</text>
+  <text x="1355" y="520" class="small">• Server tao PaymentIntent</text>
+  <text x="1355" y="546" class="small">• Tra paymentIntentId = pi_...</text>
+  <text x="1355" y="572" class="small">• Co the kich hoat 3DS/SCA</text>
+
+  <rect x="1330" y="645" width="350" height="130" class="external"/>
+  <text x="1505" y="681" text-anchor="middle" class="box-title">SMTP Mail</text>
+  <text x="1355" y="720" class="small">• Gui OTP dang nhap</text>
+  <text x="1355" y="746" class="small">• Khong luu OTP lau dai</text>
+
+  <rect x="1330" y="830" width="350" height="180" class="external"/>
+  <text x="1505" y="866" text-anchor="middle" class="box-title">Vault KV + Transit</text>
+  <text x="1355" y="904" class="small">• KV luu DB/SMTP/Stripe/JWT secrets</text>
+  <text x="1355" y="930" class="small">• Agent render secrets.properties</text>
+  <text x="1355" y="956" class="small">• Transit encrypt/decrypt phone, address</text>
+  <text x="1355" y="982" class="small">• Key khong xuat ra ung dung</text>
+
+  <!-- Main arrows -->
+  <path d="M295 330 L295 430" class="arrow-blue"/>
+  <text x="315" y="382" class="label">HTTPS :443</text>
+  <text x="315" y="405" class="security">TLS ma hoa kenh cong khai</text>
+
+  <path d="M510 540 L640 470" class="arrow-blue"/>
+  <text x="535" y="485" class="label">HTTP noi bo</text>
+  <text x="535" y="508" class="small">127.0.0.1:8081 / Docker network</text>
+
+  <path d="M910 710 L910 850" class="arrow-green"/>
+  <text x="930" y="780" class="label">JDBC / JPA</text>
+  <text x="930" y="805" class="security">Ghi ciphertext va token</text>
+
+  <!-- Google flows -->
+  <path d="M510 210 C780 120, 1100 130, 1330 260" class="arrow-orange dash"/>
+  <text x="760" y="152" class="label">Browser redirect den Google</text>
+  <path d="M1330 320 C1210 345, 1195 355, 1180 365" class="arrow-orange"/>
+  <text x="1205" y="340" class="small">callback code</text>
+  <path d="M1180 390 C1245 355, 1280 330, 1330 300" class="arrow-orange"/>
+  <text x="1205" y="392" class="small">token exchange + verify ID Token</text>
+
+  <!-- Stripe flows -->
+  <path d="M510 278 C815 185, 1045 230, 1330 470" class="arrow-orange dash"/>
+  <text x="745" y="216" class="label">Card data di toi Stripe.js</text>
+  <text x="745" y="240" class="danger">Server khong nhan PAN/CVV</text>
+  <path d="M1180 510 L1330 510" class="arrow-orange"/>
+  <text x="1212" y="492" class="small">create PaymentIntent</text>
+  <path d="M1330 548 L1180 548" class="arrow-orange"/>
+  <text x="1214" y="575" class="small">clientSecret / status</text>
+
+  <!-- SMTP -->
+  <path d="M1180 645 C1240 660, 1285 690, 1330 710" class="arrow-orange"/>
+  <text x="1205" y="686" class="small">send OTP</text>
+
+  <!-- Vault -->
+  <path d="M1180 890 L1330 910" class="arrow-orange"/>
+  <text x="1200" y="875" class="small">read secrets / encrypt</text>
+  <path d="M1330 960 L1180 965" class="arrow-orange"/>
+  <text x="1210" y="990" class="small">ciphertext vault:v...</text>
+
+  <!-- Notes -->
+  <rect x="80" y="720" width="430" height="140" class="note"/>
+  <text x="105" y="755" class="box-title">Diem tao / luu du lieu</text>
+  <text x="105" y="792" class="small">• JWT tao tai Jetty, luu trong cookie browser</text>
+  <text x="105" y="818" class="small">• csrfToken tao tai Jetty, luu session + form</text>
+  <text x="105" y="844" class="small">• Audit log ghi tai Jetty: logs/security-audit.log</text>
+
+  <rect x="80" y="900" width="430" height="135" class="note"/>
+  <text x="105" y="935" class="box-title">Nguyen tac bao mat</text>
+  <text x="105" y="972" class="small">• Public: chi nhin thay Apache/Envoy</text>
+  <text x="105" y="998" class="small">• App: khong luu PAN/CVV va secret key</text>
+  <text x="105" y="1024" class="small">• DB: luu ciphertext va token doi soat</text>
+
+  <rect x="1245" y="1040" width="475" height="80" class="note"/>
+  <text x="1270" y="1075" class="security">Bang chung can chup:</text>
+  <text x="1435" y="1075" class="small">CSP/HTTPS header, Stripe pi_..., Vault vault:v..., audit log</text>
+</svg>

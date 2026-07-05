@@ -3,7 +3,9 @@ package ute.shop.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,10 +23,14 @@ public class CartItem {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int _id;
 
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
 	@ManyToOne
 	@JoinColumn(name = "cart_id", nullable = false)
 	private Cart cart; // Tham chiếu đến Cart
 
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
 	@ManyToOne
 	@JoinColumn(name = "product_id", referencedColumnName = "_id", nullable = false)
 	private Product product; // Tham chiếu đến Product
@@ -55,6 +61,8 @@ public class CartItem {
 	}
 
 	// Mối quan hệ one-to-one với StyleValue
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
 	@OneToOne(mappedBy = "cartItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private StyleValue styleValue; // Tham chiếu đến StyleValue
 }

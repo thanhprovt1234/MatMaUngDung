@@ -1,0 +1,9 @@
+.git
+.github
+.settings
+.local
+target
+logs
+config/secrets.properties
+config/*.secret.properties
+*.log

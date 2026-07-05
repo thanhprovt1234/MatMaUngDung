@@ -10,6 +10,7 @@
 			thông tin cá nhân</h1>
 		<form action="${pageContext.request.contextPath}/edit-profile"
 			method="post" style="display: flex; flex-direction: column;">
+			<input type="hidden" name="csrfToken" value="${csrfToken}" />
 			<div style="margin-bottom: 15px;">
 				<label for="email"
 					style="font-size: 16px; margin-bottom: 8px; color: #333;">Email:</label>

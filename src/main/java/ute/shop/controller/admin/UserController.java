@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import ute.shop.entity.User;
 import ute.shop.services.IUserService;
 import ute.shop.services.implement.UserServiceImpl;
+import ute.shop.utils.SecurityAuditLogger;
 
 @WebServlet(urlPatterns = { "/admin/userDetails", "/admin/updateUser", "/admin/addUser", "/admin/deleteUser" })
 public class UserController extends HttpServlet{
@@ -22,6 +23,10 @@ public class UserController extends HttpServlet{
 		if (url.contains("Details")) {
 			int user_id = Integer.parseInt(req.getParameter("id"));
 			User user = uservice.findById(user_id);
+			User actor = (User) req.getSession().getAttribute("account");
+			SecurityAuditLogger.log("admin_action", req,
+					SecurityAuditLogger.fields("actor", SecurityAuditLogger.actor(actor), "action",
+							"user_details_view", "targetUserId", user_id));
 			req.setAttribute("user", user);
 
 			req.getRequestDispatcher("/views/admin/user.jsp").forward(req, resp);

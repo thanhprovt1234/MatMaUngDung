@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1000" viewBox="0 0 1700 1000">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 40px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 18px; fill: #475569; }
+      .lane-title { font-family: Arial, sans-serif; font-size: 24px; font-weight: 700; fill: #0f172a; }
+      .text { font-family: Arial, sans-serif; font-size: 18px; fill: #1f2937; }
+      .small { font-family: Arial, sans-serif; font-size: 15px; fill: #374151; }
+      .label { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #075985; }
+      .security { font-family: Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #166534; }
+      .danger { font-family: Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #991b1b; }
+      .browser { fill: #eff6ff; stroke: #2563eb; stroke-width: 3; rx: 18; }
+      .server { fill: #f0fdf4; stroke: #16a34a; stroke-width: 3; rx: 18; }
+      .google { fill: #fff7ed; stroke: #ea580c; stroke-width: 3; rx: 18; }
+      .store { fill: #f8fafc; stroke: #64748b; stroke-width: 2; rx: 14; }
+      .note { fill: #fefce8; stroke: #ca8a04; stroke-width: 2; rx: 12; }
+      .line { stroke: #94a3b8; stroke-width: 2; stroke-dasharray: 10 8; }
+      .arrow { stroke: #0f172a; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .arrow-blue { stroke: #2563eb; stroke-width: 3; fill: none; marker-end: url(#arrowhead-blue); }
+      .arrow-green { stroke: #16a34a; stroke-width: 3; fill: none; marker-end: url(#arrowhead-green); }
+      .arrow-orange { stroke: #ea580c; stroke-width: 3; fill: none; marker-end: url(#arrowhead-orange); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0f172a"/>
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrowhead-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/>
+    </marker>
+  </defs>
+
+  <rect width="1700" height="1000" fill="#ffffff"/>
+  <text x="850" y="55" text-anchor="middle" class="title">Hinh 3.3. Luong OAuth2 / OIDC Authorization Code + PKCE</text>
+  <text x="850" y="86" text-anchor="middle" class="subtitle">Browser khong gui mat khau Google cho UTESHOP; server chi nhan authorization code, verify ID Token va tao JWT cookie noi bo.</text>
+
+  <!-- Swimlane headers -->
+  <rect x="70" y="125" width="420" height="90" class="browser"/>
+  <text x="280" y="178" text-anchor="middle" class="lane-title">Browser / Client</text>
+
+  <rect x="640" y="125" width="420" height="90" class="server"/>
+  <text x="850" y="178" text-anchor="middle" class="lane-title">UTEShop Server</text>
+
+  <rect x="1210" y="125" width="420" height="90" class="google"/>
+  <text x="1420" y="178" text-anchor="middle" class="lane-title">Google OIDC Provider</text>
+
+  <line x1="280" y1="215" x2="280" y2="860" class="line"/>
+  <line x1="850" y1="215" x2="850" y2="860" class="line"/>
+  <line x1="1420" y1="215" x2="1420" y2="860" class="line"/>
+
+  <!-- Step 1 -->
+  <rect x="90" y="250" width="380" height="80" class="store"/>
+  <text x="110" y="282" class="text">1. User click "Login with Google"</text>
+  <text x="110" y="310" class="small">GET /uteshop/oauth2/google/start</text>
+  <path d="M470 290 L640 290" class="arrow-blue"/>
+
+  <!-- Step 2 -->
+  <rect x="660" y="245" width="380" height="115" class="store"/>
+  <text x="680" y="278" class="text">2. Server tao gia tri bao mat</text>
+  <text x="680" y="306" class="small">state: chong OAuth CSRF</text>
+  <text x="680" y="331" class="small">nonce: chong replay ID Token</text>
+  <text x="680" y="356" class="small">code_verifier -> code_challenge S256</text>
+
+  <rect x="660" y="385" width="380" height="92" class="note"/>
+  <text x="682" y="418" class="security">Luu trong server-side session:</text>
+  <text x="682" y="446" class="small">state, nonce, code_verifier</text>
+  <text x="682" y="468" class="danger">Khong gui code_verifier sang Google luc nay</text>
+
+  <!-- Step 3 redirect to google -->
+  <path d="M850 500 C1010 500, 1115 300, 1210 300" class="arrow-orange"/>
+  <text x="1005" y="468" class="label">3. Redirect authorization request</text>
+  <text x="1005" y="492" class="small">client_id, redirect_uri, scope</text>
+  <text x="1005" y="516" class="small">state, nonce, code_challenge, method=S256</text>
+
+  <!-- Browser follows redirect -->
+  <path d="M280 330 C565 560, 940 560, 1210 330" class="arrow-orange"/>
+  <text x="590" y="590" class="label">Browser follow redirect sang Google</text>
+
+  <!-- Step 4 Google Login -->
+  <rect x="1230" y="265" width="380" height="105" class="store"/>
+  <text x="1250" y="298" class="text">4. Google xac thuc nguoi dung</text>
+  <text x="1250" y="326" class="small">User login / consent</text>
+  <text x="1250" y="352" class="small">Google tao authorization code</text>
+
+  <!-- Step 5 callback -->
+  <path d="M1210 420 C980 420, 710 420, 490 420" class="arrow-orange"/>
+  <text x="675" y="395" class="label">5. Callback ve UTESHOP</text>
+  <text x="675" y="443" class="small">/oauth2/google/callback?code=...&amp;state=...</text>
+
+  <path d="M490 420 L640 420" class="arrow-blue"/>
+
+  <!-- Step 6 server validates -->
+  <rect x="660" y="520" width="380" height="125" class="store"/>
+  <text x="680" y="552" class="text">6. Server kiem tra callback</text>
+  <text x="680" y="580" class="small">actual state == session state</text>
+  <text x="680" y="606" class="small">lay code_verifier tu session</text>
+  <text x="680" y="632" class="small">neu sai -> reject request</text>
+
+  <!-- Step 7 token exchange -->
+  <path d="M1040 620 L1210 620" class="arrow-green"/>
+  <text x="1070" y="595" class="label">7. Token exchange</text>
+  <text x="1070" y="646" class="small">code + code_verifier + client_secret</text>
+
+  <path d="M1210 690 L1040 690" class="arrow-green"/>
+  <text x="1066" y="717" class="label">8. Tra token response</text>
+  <text x="1066" y="742" class="small">ID Token, access token</text>
+
+  <!-- Google token endpoint box -->
+  <rect x="1230" y="570" width="380" height="145" class="store"/>
+  <text x="1250" y="602" class="text">Google Token Endpoint</text>
+  <text x="1250" y="630" class="small">Kiem tra code + PKCE</text>
+  <text x="1250" y="656" class="small">Neu code_verifier hop le -> tra token</text>
+  <text x="1250" y="682" class="small">ID Token duoc ky boi Google</text>
+
+  <!-- Step 9 verify ID Token and create session -->
+  <rect x="660" y="740" width="380" height="145" class="store"/>
+  <text x="680" y="772" class="text">9. UTESHOP verify ID Token</text>
+  <text x="680" y="800" class="small">Kiem tra signature, issuer, audience</text>
+  <text x="680" y="826" class="small">Kiem tra exp va nonce</text>
+  <text x="680" y="852" class="small">Find/create user, tao session</text>
+  <text x="680" y="878" class="small">Tao ACCESS_TOKEN JWT cookie</text>
+
+  <!-- Step 10 response to browser -->
+  <path d="M640 815 L490 815" class="arrow-blue"/>
+  <text x="505" y="792" class="label">10. Redirect /home</text>
+  <text x="505" y="842" class="small">Set-Cookie: ACCESS_TOKEN; HttpOnly; Secure; SameSite=Lax</text>
+
+  <rect x="90" y="760" width="380" height="110" class="store"/>
+  <text x="110" y="792" class="text">Browser sau dang nhap</text>
+  <text x="110" y="820" class="small">Luu JSESSIONID va ACCESS_TOKEN</text>
+  <text x="110" y="846" class="small">Truy cap /uteshop/home voi phien noi bo</text>
+
+  <!-- Security notes -->
+  <rect x="90" y="910" width="470" height="60" class="note"/>
+  <text x="115" y="946" class="security">Diem chinh:</text>
+  <text x="210" y="946" class="small">Mat khau Google khong di qua UTESHOP.</text>
+
+  <rect x="615" y="910" width="470" height="60" class="note"/>
+  <text x="640" y="946" class="security">PKCE:</text>
+  <text x="705" y="946" class="small">Authorization code vo dung neu thieu code_verifier.</text>
+
+  <rect x="1140" y="910" width="470" height="60" class="note"/>
+  <text x="1165" y="946" class="security">Session:</text>
+  <text x="1242" y="946" class="small">UTEShop phat hanh JWT cookie noi bo sau verify.</text>
+</svg>

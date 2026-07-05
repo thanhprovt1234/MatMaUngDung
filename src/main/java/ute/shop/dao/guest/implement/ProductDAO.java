@@ -106,7 +106,7 @@ public class ProductDAO {
     public List<Product> getProductsBySales(int limit) {
         EntityManager em = JPAConfig.getEntityManager();
         try {
-            String jpql = "SELECT p FROM Product p WHERE p.sold >= 10 ORDER BY p.sold DESC";
+            String jpql = "SELECT p FROM Product p ORDER BY p.sold DESC";
             return em.createQuery(jpql, Product.class)
                     .setMaxResults(limit)
                     .getResultList();

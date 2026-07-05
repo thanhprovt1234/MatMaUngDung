@@ -3,4 +3,5 @@ target/
 .idea/
 .env
 infinityfree/
-
+config/secrets.properties
+config/*.secret.properties

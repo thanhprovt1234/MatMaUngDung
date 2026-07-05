@@ -12,6 +12,7 @@
 		<form action="${pageContext.request.contextPath}/reviews/add"
 			method="post"
 			style="display: flex; flex-direction: column; gap: 20px;">
+			<input type="hidden" name="csrfToken" value="${csrfToken}" />
 			<!-- Loop over orderItems to add productId for each product -->
 			<c:forEach var="item" items="${order.orderItems}">
 				<input type="hidden" name="productId" value="${item.product._id}" />

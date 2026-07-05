@@ -23,6 +23,7 @@
 				<p>Mã OTP đã được gửi tới ${maskedEmail}.</p>
 				<form action="${pageContext.request.contextPath}/forgot-password"
 					method="post" style="display: inline-block; text-align: left;">
+					<input type="hidden" name="csrfToken" value="${csrfToken}" />
 					<input type="hidden" name="action" value="verifyOtp" />
 					<div class="form-group" style="margin-bottom: 20px;">
 						<label for="otp" style="font-size: 16px; color: #333;">Nhập mã OTP:</label>
@@ -40,6 +41,7 @@
 			<c:when test="${forgotStep == 'reset'}">
 				<form action="${pageContext.request.contextPath}/forgot-password"
 					method="post" style="display: inline-block; text-align: left;">
+					<input type="hidden" name="csrfToken" value="${csrfToken}" />
 					<input type="hidden" name="action" value="resetPassword" />
 					<div class="form-group" style="margin-bottom: 20px;">
 						<label for="password" style="font-size: 16px; color: #333;">Mật khẩu mới:</label>
@@ -63,6 +65,7 @@
 			<c:otherwise>
 				<form action="${pageContext.request.contextPath}/forgot-password"
 					method="post" style="display: inline-block; text-align: left;">
+					<input type="hidden" name="csrfToken" value="${csrfToken}" />
 					<input type="hidden" name="action" value="requestOtp" />
 					<div class="form-group" style="margin-bottom: 20px;">
 						<label for="email" style="font-size: 16px; color: #333;">Nhập email của bạn:</label>

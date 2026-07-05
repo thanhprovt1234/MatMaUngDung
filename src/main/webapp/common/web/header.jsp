@@ -71,9 +71,9 @@
 									Account</a></li>
 							<li><a href="${pageContext.request.contextPath}/user/followedProducts"><i
 									class="fa fa-star"></i> Wishlist</a></li>
-							<li><a href="${pageContext.request.contextPath}/orders"><i
+							<li><a href="${pageContext.request.contextPath}/orders/place"><i
 									class="fa fa-crosshairs"></i> Checkout</a></li>
-							<li><a href="${pageContext.request.contextPath}/cart"><i
+							<li><a href="${pageContext.request.contextPath}/cart/view"><i
 									class="fa fa-shopping-cart"></i> Cart</a></li>
 							<li><c:choose>
 									<c:when test="${not empty sessionScope.account}">
@@ -120,8 +120,8 @@
 								<ul role="menu" class="sub-menu">
 									<li><a href="${pageContext.request.contextPath}/Eshopper/shop.html">Products</a></li>
 									<li><a href="${pageContext.request.contextPath}/Eshopper/product-details.html">Product Details</a></li>
-									<li><a href="${pageContext.request.contextPath}/Eshopper/checkout.html">Checkout</a></li>
-									<li><a href="${pageContext.request.contextPath}/Eshopper/cart.html">Cart</a></li>
+									<li><a href="${pageContext.request.contextPath}/orders/place">Checkout</a></li>
+									<li><a href="${pageContext.request.contextPath}/cart/view">Cart</a></li>
 									<li><a href="${pageContext.request.contextPath}/login">Login</a></li>
 								</ul></li>
 							<li class="dropdown"><a href="#">Blog<i

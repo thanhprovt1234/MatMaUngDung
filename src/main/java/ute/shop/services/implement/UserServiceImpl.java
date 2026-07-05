@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import ute.shop.utils.BCryptUtils;
+import ute.shop.utils.SecurityAuditLogger;
 import ute.shop.dao.IUserDao;
 import ute.shop.dao.implement.UserDaoImpl;
 import ute.shop.entity.User;
@@ -213,6 +214,9 @@ public class UserServiceImpl implements IUserService {
 			user.setIsLocked(true);
 			user.setLockoutTime(new java.util.Date());
 			userDao.update(user);
+			SecurityAuditLogger.log("account_locked",
+					SecurityAuditLogger.fields("userId", user.get_id(), "email", user.getEmail(),
+							"failedAttempts", attempts, "reason", "password_failures"));
 			throw new RuntimeException("Account has been locked after 5 failed login attempts.");
 		}
 

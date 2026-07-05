@@ -32,6 +32,7 @@
 					<form action="${pageContext.request.contextPath}/upload-avatar"
 						method="post" enctype="multipart/form-data"
 						style="margin-top: 20px; display: flex; flex-direction: column; align-items: center;">
+						<input type="hidden" name="csrfToken" value="${csrfToken}" />
 						<input type="file" name="avatar" accept="image/*" required
 							style="padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px;">
 						<button type="submit"
@@ -101,6 +102,7 @@
 						<h3>Thay đổi mật khẩu</h3>
 						<form action="${pageContext.request.contextPath}/change-password"
 							method="post" style="display: inline-block; text-align: left;">
+							<input type="hidden" name="csrfToken" value="${csrfToken}" />
 							<div>
 								<label for="oldPassword">Mật khẩu cũ:</label> <input
 									type="password" id="oldPassword" name="oldPassword" required

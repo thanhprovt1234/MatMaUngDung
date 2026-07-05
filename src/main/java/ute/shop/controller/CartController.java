@@ -6,20 +6,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ute.shop.entity.Cart;
-import ute.shop.entity.CartItem;
-import ute.shop.entity.Order;
-import ute.shop.entity.OrderItem;
 import ute.shop.entity.User;
 import ute.shop.services.ICartService;
-import ute.shop.services.IProductService;
 import ute.shop.services.implement.CartServiceImpl;
-import ute.shop.services.implement.ProductServiceImpl;
-import ute.shop.services.implement.StoreServiceImpl;
-import ute.shop.services.IStoreService;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 @WebServlet(urlPatterns = { "/cart", "/cart/add", "/cart/update", "/cart/remove", "/cart/view" })
 public class CartController extends HttpServlet {
@@ -27,8 +21,6 @@ public class CartController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private final ICartService cartService = new CartServiceImpl();
-	private final IProductService productService = new ProductServiceImpl();
-	private final IStoreService storeService = new StoreServiceImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -66,68 +58,48 @@ public class CartController extends HttpServlet {
 	}
 
 	private void viewCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    User currentUser = (User) req.getSession().getAttribute("account");
-	    if (currentUser == null) {
-	        resp.sendRedirect(req.getContextPath() + "/login");
-	        return;
-	    }
+		User currentUser = (User) req.getSession().getAttribute("account");
+		if (currentUser == null) {
+			resp.sendRedirect(req.getContextPath() + "/login");
+			return;
+		}
 
-	    Cart cart = cartService.findCartByUserId(currentUser.get_id()); // không throw
+		Cart cart = cartService.findCartByUserId(currentUser.get_id());
+		if (cart == null) {
+			cart = new Cart();
+			cart.setCartItems(new ArrayList<>());
+		}
 
-	    if (cart == null) {
-	        cart = new Cart();
-	        cart.setCartItems(new java.util.ArrayList<>()); // giỏ trống để JSP render
-	    }
-
-	    req.setAttribute("cart", cart);
-	    req.getRequestDispatcher("/views/cart.jsp").forward(req, resp);
+		req.setAttribute("cart", cart);
+		req.getRequestDispatcher("/views/cart.jsp").forward(req, resp);
 	}
-
 
 	private void addToCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		User currentUser = (User) req.getSession().getAttribute("account");
-
-		// Kiểm tra người dùng đã đăng nhập chưa
 		if (currentUser == null) {
 			resp.sendRedirect(req.getContextPath() + "/login");
 			return;
 		}
 
 		try {
-			// Lấy thông tin từ request
 			int productId = Integer.parseInt(req.getParameter("productId"));
 			int quantity = Integer.parseInt(req.getParameter("quantity"));
 
-			// Kiểm tra số lượng hợp lệ
-			if (quantity <= 0) {
-				throw new IllegalArgumentException("Số lượng phải lớn hơn 0.");
-			}
-
-			// Thêm sản phẩm vào giỏ hàng thông qua service
 			Cart updatedCart = cartService.addOrUpdateCartItem(currentUser.get_id(), productId, quantity);
-
-			// Cập nhật giỏ hàng trong session
 			req.getSession().setAttribute("cart", updatedCart);
-
-			// Chuyển hướng về trang giỏ hàng
 			resp.sendRedirect(req.getContextPath() + "/cart/view?success=product-added");
 		} catch (NumberFormatException e) {
-			// Xử lý lỗi nếu productId hoặc quantity không phải là số
-			e.printStackTrace();
-			resp.sendRedirect(req.getContextPath() + "/error?message=Invalid input format");
+			redirectWithError(req, resp, "Invalid input format.");
 		} catch (IllegalArgumentException e) {
-			// Xử lý lỗi nếu input không hợp lệ
-			resp.sendRedirect(req.getContextPath() + "/error?message=" + e.getMessage());
+			redirectWithError(req, resp, e.getMessage());
 		} catch (Exception e) {
-			// Xử lý các lỗi khác
 			e.printStackTrace();
-			resp.sendRedirect(req.getContextPath() + "/error?message=Unexpected error occurred");
+			redirectWithError(req, resp, "Unexpected error occurred.");
 		}
 	}
 
 	private void updateCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		User currentUser = (User) req.getSession().getAttribute("account");
-
 		if (currentUser == null) {
 			resp.sendRedirect(req.getContextPath() + "/login");
 			return;
@@ -137,64 +109,46 @@ public class CartController extends HttpServlet {
 			int productId = Integer.parseInt(req.getParameter("productId"));
 			int newCount = Integer.parseInt(req.getParameter("count"));
 
-			if (newCount <= 0) {
-				throw new IllegalArgumentException("Số lượng phải lớn hơn 0.");
-			}
-
-			Cart updatedCart = cartService.addOrUpdateCartItem(currentUser.get_id(), productId, newCount);
+			Cart updatedCart = cartService.setCartItemQuantity(currentUser.get_id(), productId, newCount);
 			req.getSession().setAttribute("cart", updatedCart);
 			resp.sendRedirect(req.getContextPath() + "/cart/view");
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			resp.sendRedirect(req.getContextPath() + "/error?message=InvalidInput");
+			redirectWithError(req, resp, "Invalid input format.");
 		} catch (IllegalArgumentException e) {
-			resp.sendRedirect(req.getContextPath() + "/error?message=" + e.getMessage());
+			redirectWithError(req, resp, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectWithError(req, resp, "Unexpected error occurred.");
 		}
 	}
 
 	private void removeFromCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		User currentUser = (User) req.getSession().getAttribute("account");
-
 		if (currentUser == null) {
 			resp.sendRedirect(req.getContextPath() + "/login");
 			return;
 		}
 
 		try {
-			// Lấy productId từ request
 			int productId = Integer.parseInt(req.getParameter("productId"));
-			System.out.println("Attempting to remove product ID: " + productId);
-
-			// Xóa sản phẩm khỏi giỏ hàng bằng service
 			cartService.removeCartItem(currentUser.get_id(), productId);
 
-			// Lấy lại giỏ hàng đã cập nhật
-			Cart updatedCart = cartService.getCartByUser(currentUser);
-			System.out.println("Updated cart size: "
-					+ (updatedCart.getCartItems() != null ? updatedCart.getCartItems().size() : 0));
-
-			// Cập nhật lại session
+			Cart updatedCart = cartService.findCartByUserId(currentUser.get_id());
 			req.getSession().setAttribute("cart", updatedCart);
-
-			// Chuyển hướng về trang giỏ hàng
 			resp.sendRedirect(req.getContextPath() + "/cart/view");
 		} catch (NumberFormatException e) {
-			// Xử lý lỗi nếu `productId` không phải là số
-			e.printStackTrace();
-			resp.sendRedirect(req.getContextPath() + "/error?message=Invalid product ID format");
+			redirectWithError(req, resp, "Invalid product ID format.");
 		} catch (IllegalArgumentException e) {
-			// Xử lý lỗi nếu `productId` không hợp lệ
-			resp.sendRedirect(req.getContextPath() + "/error?message=" + e.getMessage());
+			redirectWithError(req, resp, e.getMessage());
 		} catch (Exception e) {
-			// Xử lý các lỗi khác
 			e.printStackTrace();
-			resp.sendRedirect(req.getContextPath() + "/error?message=Unexpected error occurred");
+			redirectWithError(req, resp, "Unexpected error occurred.");
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void clearCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		User currentUser = (User) req.getSession().getAttribute("account");
-
 		if (currentUser == null) {
 			resp.sendRedirect(req.getContextPath() + "/login");
 			return;
@@ -202,11 +156,16 @@ public class CartController extends HttpServlet {
 
 		try {
 			cartService.clearCart(currentUser.get_id());
-			req.getSession().removeAttribute("cart"); // Xóa giỏ hàng khỏi session
+			req.getSession().removeAttribute("cart");
 			resp.sendRedirect(req.getContextPath() + "/cart/view?success=cart-cleared");
 		} catch (Exception e) {
 			e.printStackTrace();
-			resp.sendRedirect(req.getContextPath() + "/error?message=Unable to clear cart");
+			redirectWithError(req, resp, "Unable to clear cart.");
 		}
+	}
+
+	private void redirectWithError(HttpServletRequest req, HttpServletResponse resp, String message) throws IOException {
+		String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8);
+		resp.sendRedirect(req.getContextPath() + "/error?message=" + encodedMessage);
 	}
 }

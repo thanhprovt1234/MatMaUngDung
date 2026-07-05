@@ -13,6 +13,7 @@ import ute.shop.entity.User;
 import ute.shop.services.IUserService;
 import ute.shop.services.implement.UserServiceImpl;
 import ute.shop.utils.JwtUtils;
+import ute.shop.utils.SecurityAuditLogger;
 
 @WebFilter(urlPatterns = { "/admin/*" })
 public class AuthorizeFilter implements jakarta.servlet.Filter {
@@ -27,12 +28,16 @@ public class AuthorizeFilter implements jakarta.servlet.Filter {
 
 		User account = resolveAccount(req);
 		if (account == null) {
+			SecurityAuditLogger.log("admin_auth_required", req,
+					SecurityAuditLogger.fields("reason", "anonymous"));
 			resp.sendRedirect(req.getContextPath() + "/login");
 			return;
 		}
 
 		String role = account.getRole() == null ? "" : account.getRole().toString();
 		if (!"ADMIN".equalsIgnoreCase(role)) {
+			SecurityAuditLogger.log("admin_access_denied", req,
+					SecurityAuditLogger.fields("actor", SecurityAuditLogger.actor(account), "role", role));
 			resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
 			return;
 		}

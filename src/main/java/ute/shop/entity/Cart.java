@@ -3,7 +3,9 @@ package ute.shop.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,10 +25,14 @@ public class Cart {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", referencedColumnName = "_id", nullable = false)
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "store_id", nullable = true)
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
 	private Store store;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -48,6 +54,8 @@ public class Cart {
 		updatedAt = new Date();
 	}
 
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<CartItem> cartItems = new ArrayList<>(); // Một Cart có thể có nhiều CartItem
 

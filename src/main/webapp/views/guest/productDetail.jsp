@@ -133,6 +133,7 @@
 								alt="" /> <span> <span>US $${product.price}</span>
 								<form action="${pageContext.request.contextPath}/cart/add"
 									method="POST">
+									<input type="hidden" name="csrfToken" value="${csrfToken}">
 									<input type="hidden" name="productId" value="${product._id}">
 									<div class="form-group">
 										<label for="quantity-${product._id}">Quantity:</label> <input
@@ -156,6 +157,7 @@
 							</p>
 							<form action="${pageContext.request.contextPath}/user/follow"
 								method="POST">
+								<input type="hidden" name="csrfToken" value="${csrfToken}">
 								<input type="hidden" name="userId"
 									value="${sessionScope.account._id}"> <input
 									type="hidden" name="productId" value="${product._id}">

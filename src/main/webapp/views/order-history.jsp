@@ -50,6 +50,7 @@
 										<form
 											action="${pageContext.request.contextPath}/orders/cancel"
 											method="post" style="display: inline;">
+											<input type="hidden" name="csrfToken" value="${csrfToken}" />
 											<input type="hidden" name="orderId" value="${order._id}" />
 											<button type="submit"
 												style="background-color: #dc3545; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer;">Hủy</button>

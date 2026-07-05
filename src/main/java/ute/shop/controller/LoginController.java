@@ -14,6 +14,7 @@ import ute.shop.services.IUserService;
 import ute.shop.services.implement.UserServiceImpl;
 import ute.shop.utils.JwtUtils;
 import ute.shop.utils.OtpChallenge;
+import ute.shop.utils.SecurityAuditLogger;
 import ute.shop.utils.SimpleRateLimiter;
 import ute.shop.utils.SmtpMailService;
 
@@ -66,6 +67,8 @@ public class LoginController extends HttpServlet {
 
 		if (!SimpleRateLimiter.allow("login:" + clientKey(req) + ":" + email.toLowerCase(),
 				MAX_LOGIN_ATTEMPTS_PER_WINDOW, LOGIN_RATE_WINDOW_MILLIS)) {
+			SecurityAuditLogger.log("login_failed", req,
+					SecurityAuditLogger.fields("email", email, "reason", "rate_limited"));
 			req.setAttribute("alert", "Too many login attempts. Please wait before trying again.");
 			req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
 			return;
@@ -81,6 +84,8 @@ public class LoginController extends HttpServlet {
 			req.setAttribute("message", "Mã OTP đã được gửi tới email của bạn.");
 			req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
 		} catch (RuntimeException e) {
+			SecurityAuditLogger.log("login_failed", req,
+					SecurityAuditLogger.fields("email", email, "reason", e.getMessage()));
 			req.setAttribute("alert", e.getMessage());
 			req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
 		}
@@ -92,6 +97,7 @@ public class LoginController extends HttpServlet {
 		String otp = valueOrDefault(req.getParameter("otp"), "").trim();
 
 		if (challenge == null) {
+			SecurityAuditLogger.log("otp_failed", req, SecurityAuditLogger.fields("reason", "missing_challenge"));
 			req.setAttribute("alert", "Phiên xác thực OTP không tồn tại. Vui lòng đăng nhập lại.");
 			req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
 			return;
@@ -99,6 +105,8 @@ public class LoginController extends HttpServlet {
 
 		if (!SimpleRateLimiter.allow("otp-verify:" + clientKey(req) + ":" + challenge.getEmail().toLowerCase(),
 				MAX_OTP_ATTEMPTS_PER_WINDOW, OTP_RATE_WINDOW_MILLIS)) {
+			SecurityAuditLogger.log("otp_failed", req,
+					SecurityAuditLogger.fields("email", challenge.getEmail(), "reason", "rate_limited"));
 			req.setAttribute("mfaRequired", true);
 			req.setAttribute("mfaEmail", maskEmail(challenge.getEmail()));
 			req.setAttribute("alert", "Too many OTP attempts. Please request a new code later.");
@@ -108,12 +116,16 @@ public class LoginController extends HttpServlet {
 
 		if (challenge.isExpired()) {
 			session.removeAttribute(LOGIN_OTP_SESSION);
+			SecurityAuditLogger.log("otp_failed", req,
+					SecurityAuditLogger.fields("email", challenge.getEmail(), "reason", "expired"));
 			req.setAttribute("alert", "Mã OTP đã hết hạn. Vui lòng đăng nhập lại.");
 			req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
 			return;
 		}
 
 		if (!challenge.matches(otp)) {
+			SecurityAuditLogger.log("otp_failed", req,
+					SecurityAuditLogger.fields("email", challenge.getEmail(), "reason", "invalid_code"));
 			req.setAttribute("mfaRequired", true);
 			req.setAttribute("mfaEmail", maskEmail(challenge.getEmail()));
 			req.setAttribute("alert", "Mã OTP không đúng.");
@@ -124,6 +136,8 @@ public class LoginController extends HttpServlet {
 		User user = userService.findById(challenge.getUserId());
 		if (user == null) {
 			session.removeAttribute(LOGIN_OTP_SESSION);
+			SecurityAuditLogger.log("otp_failed", req,
+					SecurityAuditLogger.fields("userId", challenge.getUserId(), "reason", "user_not_found"));
 			req.setAttribute("alert", "Không tìm thấy tài khoản. Vui lòng đăng nhập lại.");
 			req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
 			return;
@@ -137,6 +151,8 @@ public class LoginController extends HttpServlet {
 		if (challenge.isRememberMe()) {
 			saveRememberMe(resp, user.getEmail());
 		}
+		SecurityAuditLogger.log("login_success", req,
+				SecurityAuditLogger.fields("actor", SecurityAuditLogger.actor(user), "method", "password_otp"));
 
 		redirectByRole(req, resp, user);
 	}

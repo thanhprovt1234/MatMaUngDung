@@ -12,6 +12,8 @@ public interface ICartService {
 
 	Cart addOrUpdateCartItem(int userId, int productId, int quantity);
 
+	Cart setCartItemQuantity(int userId, int productId, int quantity);
+
 	void removeCartItem(int userId, int productId);
 
 	void clearCart(int userId);

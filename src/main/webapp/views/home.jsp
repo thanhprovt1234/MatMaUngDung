@@ -97,7 +97,7 @@
 				</div>
 
 				<div class="col-sm-9 padding-right">
-					<div class="features_items">
+					<div class="features_items" id="featured-products">
 						<!--features_items-->
 						<h2 class="title text-center">Danh sách sản phẩm</h2>
 						<c:forEach var="product" items="${products}">
@@ -113,6 +113,7 @@
 											<h2>${product.price}$</h2>
 											<p>${product.name}</p>
 											<form action="${pageContext.request.contextPath}/cart/add" method="post" style="display:inline;">
+  													<input type="hidden" name="csrfToken" value="${csrfToken}" />
   													<input type="hidden" name="productId" value="${product._id}" />
   													<input type="hidden" name="quantity" value="1" />
   													<button type="submit" class="btn btn-default add-to-cart">
@@ -201,8 +202,8 @@
 													<img src="${URL}Eshopper/images/home/recommend1.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
+													<a href="#featured-products" class="btn btn-default add-to-cart"><i
+														class="fa fa-shopping-cart"></i>View products</a>
 												</div>
 
 											</div>
@@ -215,8 +216,8 @@
 													<img src="${URL}Eshopper/images/home/recommend2.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
+													<a href="#featured-products" class="btn btn-default add-to-cart"><i
+														class="fa fa-shopping-cart"></i>View products</a>
 												</div>
 
 											</div>
@@ -229,8 +230,8 @@
 													<img src="${URL}Eshopper/images/home/recommend3.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
+													<a href="#featured-products" class="btn btn-default add-to-cart"><i
+														class="fa fa-shopping-cart"></i>View products</a>
 												</div>
 
 											</div>
@@ -245,8 +246,8 @@
 													<img src="${URL}Eshopper/images/home/recommend1.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
+													<a href="#featured-products" class="btn btn-default add-to-cart"><i
+														class="fa fa-shopping-cart"></i>View products</a>
 												</div>
 
 											</div>
@@ -259,8 +260,8 @@
 													<img src="${URL}Eshopper/images/home/recommend2.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
+													<a href="#featured-products" class="btn btn-default add-to-cart"><i
+														class="fa fa-shopping-cart"></i>View products</a>
 												</div>
 
 											</div>
@@ -273,8 +274,8 @@
 													<img src="${URL}Eshopper/images/home/recommend3.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
+													<a href="#featured-products" class="btn btn-default add-to-cart"><i
+														class="fa fa-shopping-cart"></i>View products</a>
 												</div>
 
 											</div>

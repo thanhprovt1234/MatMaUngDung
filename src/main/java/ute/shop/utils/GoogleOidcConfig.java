@@ -11,15 +11,15 @@ public final class GoogleOidcConfig {
 	}
 
 	public static String clientId() {
-		return requiredSetting("google.client.id", "GOOGLE_CLIENT_ID");
+		return SecretsConfig.require("google.client.id", "GOOGLE_CLIENT_ID");
 	}
 
 	public static String clientSecret() {
-		return requiredSetting("google.client.secret", "GOOGLE_CLIENT_SECRET");
+		return SecretsConfig.require("google.client.secret", "GOOGLE_CLIENT_SECRET");
 	}
 
 	public static String redirectUri(HttpServletRequest request) {
-		String configured = setting("google.redirect.uri", "GOOGLE_REDIRECT_URI", null);
+		String configured = SecretsConfig.get("google.redirect.uri", "GOOGLE_REDIRECT_URI", null);
 		if (configured != null && !configured.isBlank()) {
 			return configured.trim();
 		}
@@ -54,25 +54,5 @@ public final class GoogleOidcConfig {
 			return null;
 		}
 		return value.split(",", 2)[0].trim();
-	}
-
-	private static String requiredSetting(String propertyName, String envName) {
-		String value = setting(propertyName, envName, null);
-		if (value == null || value.isBlank()) {
-			throw new IllegalStateException(envName + " is not configured.");
-		}
-		return value.trim();
-	}
-
-	private static String setting(String propertyName, String envName, String defaultValue) {
-		String value = System.getProperty(propertyName);
-		if (value != null && !value.trim().isEmpty()) {
-			return value.trim();
-		}
-		value = System.getenv(envName);
-		if (value != null && !value.trim().isEmpty()) {
-			return value.trim();
-		}
-		return defaultValue;
 	}
 }

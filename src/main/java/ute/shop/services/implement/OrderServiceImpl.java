@@ -113,8 +113,6 @@ public class OrderServiceImpl implements IOrderService {
 			Order savedOrder = orderDao.save(order);
 
 			// Xóa giỏ hàng sau khi đặt hàng thành công
-			cartService.clearCart(userId);
-
 			return savedOrder;
 		} catch (Exception e) {
 			throw new RuntimeException("Error placing order", e);

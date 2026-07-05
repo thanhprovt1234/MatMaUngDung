@@ -110,20 +110,8 @@ public final class JwtUtils {
 	}
 
 	private static SecretKey getSigningKey() {
-		String secret = setting("jwt.secret", "JWT_SECRET", DEFAULT_DEV_SECRET);
+		String secret = SecretsConfig.get("jwt.secret", "JWT_SECRET", DEFAULT_DEV_SECRET);
 		return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-	}
-
-	private static String setting(String propertyName, String envName, String defaultValue) {
-		String value = System.getProperty(propertyName);
-		if (value != null && !value.trim().isEmpty()) {
-			return value.trim();
-		}
-		value = System.getenv(envName);
-		if (value != null && !value.trim().isEmpty()) {
-			return value.trim();
-		}
-		return defaultValue;
 	}
 
 	private static String cookiePath(HttpServletRequest request) {
@@ -135,7 +123,7 @@ public final class JwtUtils {
 		if (request.isSecure()) {
 			return true;
 		}
-		if ("true".equalsIgnoreCase(setting("app.cookie.secure", "FORCE_SECURE_COOKIE", "false"))) {
+		if ("true".equalsIgnoreCase(SecretsConfig.get("app.cookie.secure", "FORCE_SECURE_COOKIE", "false"))) {
 			return true;
 		}
 		if ("https".equalsIgnoreCase(request.getHeader("X-Forwarded-Proto"))) {

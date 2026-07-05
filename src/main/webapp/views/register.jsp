@@ -25,6 +25,7 @@
 			<div class="row clearfix">
 				<div class="">
 					<form method="post" action="${pageContext.request.contextPath}/guest/register">
+						<input type="hidden" name="csrfToken" value="${csrfToken}" />
 						<div class="input_field">
 							<span><i aria-hidden="true" class="fa fa-envelope"></i></span> <input
 								type="email" name="email" placeholder="Email" required />

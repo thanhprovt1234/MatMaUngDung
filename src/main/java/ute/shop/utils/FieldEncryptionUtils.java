@@ -12,6 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public final class FieldEncryptionUtils {
 	public static final String PREFIX = "ENC:v1:";
+	public static final String VAULT_TRANSIT_PREFIX = "vault:v";
 
 	private static final String KEY_PROPERTY = "field.encryption.key";
 	private static final String KEY_ENV = "FIELD_ENCRYPTION_KEY";
@@ -27,6 +28,10 @@ public final class FieldEncryptionUtils {
 	public static String encrypt(String plaintext) {
 		if (plaintext == null || plaintext.isBlank() || isEncrypted(plaintext)) {
 			return plaintext;
+		}
+
+		if (VaultTransitClient.isEnabled()) {
+			return VaultTransitClient.encrypt(plaintext);
 		}
 
 		try {
@@ -48,6 +53,10 @@ public final class FieldEncryptionUtils {
 			return storedValue;
 		}
 
+		if (isVaultTransitEncrypted(storedValue)) {
+			return VaultTransitClient.decrypt(storedValue);
+		}
+
 		String[] parts = storedValue.split(":", 4);
 		if (parts.length != 4) {
 			throw new IllegalStateException("Invalid encrypted field format.");
@@ -67,11 +76,15 @@ public final class FieldEncryptionUtils {
 	}
 
 	public static boolean isEncrypted(String value) {
-		return value != null && value.startsWith(PREFIX);
+		return value != null && (value.startsWith(PREFIX) || isVaultTransitEncrypted(value));
+	}
+
+	private static boolean isVaultTransitEncrypted(String value) {
+		return value != null && value.startsWith(VAULT_TRANSIT_PREFIX);
 	}
 
 	private static SecretKey encryptionKey() {
-		String encodedKey = setting(KEY_PROPERTY, KEY_ENV);
+		String encodedKey = SecretsConfig.get(KEY_PROPERTY, KEY_ENV, null);
 		if (encodedKey == null || encodedKey.isBlank()) {
 			throw new IllegalStateException(KEY_ENV + " is not configured.");
 		}
@@ -87,17 +100,5 @@ public final class FieldEncryptionUtils {
 			throw new IllegalStateException(KEY_ENV + " must decode to 16, 24, or 32 bytes.");
 		}
 		return new SecretKeySpec(keyBytes, "AES");
-	}
-
-	private static String setting(String propertyName, String envName) {
-		String value = System.getProperty(propertyName);
-		if (value != null && !value.trim().isEmpty()) {
-			return value.trim();
-		}
-		value = System.getenv(envName);
-		if (value != null && !value.trim().isEmpty()) {
-			return value.trim();
-		}
-		return null;
 	}
 }
